@@ -49,11 +49,13 @@ sub printList{
 sub main{
     $count = 0;
     while($_ = <STDIN>){
-       
-        if($_ =~ m/^<browser>(.*?)<\/browser>$/){
-            addToList($1);
-             $count++;
-           #print "$1\n";
+        if($_ =~ m/^<browser/){
+            if($_ =~ m/^<browser>(.*?)<\/browser>$/){
+                addToList($1);
+                 
+               #print "$1\n";
+            }
+            $count++;
         }
     }
     print "$count\n";
