@@ -19,9 +19,9 @@ use feature qw/switch/;
 sub retrieveBrowser{
     $string = shift;
     given($string){
-        when($string =~ /Firefox\/([A-Za-z0-9.]+)/i) { return "Firefox " . $1;}
-        when($string =~ /Chrome\/([A-Za-z0-9.]+)/i) { return "Chrome " . $1;}
-        when($string =~ /Internet Explorer\/([A-Za-z0-9.]+)/i) { return "Internet Explorer " . $1;}
+        when($string =~ /Firefox\/([A-Za-z0-9.]+)/i) { return "Firefox";}
+        when($string =~ /Chrome\/([A-Za-z0-9.]+)/i) { return "Chrome";}
+        when($string =~ /Internet Explorer\/([A-Za-z0-9.]+)/i) { return "Internet Explorer";}
         default { return "";}
     }
 }
