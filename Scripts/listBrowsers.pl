@@ -21,7 +21,7 @@ sub retrieveBrowser{
     given($string){
         when($string =~ /Firefox\/([A-Za-z0-9.]+)/i) { return "Firefox";}
         when($string =~ /Chrome\/([A-Za-z0-9.]+)/i) { return "Chrome";}
-        when($string =~ /Internet Explorer\/([A-Za-z0-9.]+)/i) { return "Internet Explorer";}
+        when($string =~ /MSIE ([A-Za-z0-9.]+)/i) { return "Internet Explorer";}
         default { return "";}
     }
 }
