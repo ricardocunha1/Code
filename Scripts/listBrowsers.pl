@@ -29,15 +29,15 @@ sub retrieveBrowser{
 sub addToList {
     my $string = shift;
     #$browser = retrieveBrowser($string);
-    if($browser ne "") {
-        if(onList($browser)){ # se browser ja esta na lista
-            $counter = $hash{$browser};
+    #if($browser ne "") {
+        if(onList($string)){ # se browser ja esta na lista
+            $counter = $hash{$string};
             $counter++;
-            $hash{$browser} = $counter;
+            $hash{$string} = $counter;
         } else {
-            $hash{$browser} = 1;
+            $hash{$string} = 1;
         }
-    } 
+    #} 
 }
 
 sub printList{
