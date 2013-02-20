@@ -28,7 +28,7 @@ sub retrieveBrowser{
 
 sub addToList {
     my $string = shift;
-    $browser = retrieveBrowser($string);
+    #$browser = retrieveBrowser($string);
     if($browser ne "") {
         if(onList($browser)){ # se browser ja esta na lista
             $counter = $hash{$browser};
@@ -41,6 +41,7 @@ sub addToList {
 }
 
 sub printList{
+    print scalar(keys %hash) . "\n";
     foreach $key (sort{ $hash{$b} <=> $hash{$a} } keys %hash){
         print "$key - $hash{$key}\n";
     }
