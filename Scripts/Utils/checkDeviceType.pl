@@ -4,12 +4,9 @@ Devolve o tipo de dispositivo testado
 
     "notMobile" - n‹o Ž dispositivo m—vel
     "mobile" - dispositivo mobile"tradicional"
-    "iPhone" - iPhone
-    "iPod" - iPod
-    "Android" - Android
-    "WP" - Windows Phone
-    "iPad" - iPad
-    "BB" - Blackberry
+    "smartphone" - Android/iPhone/WP/iPod
+    "tablet" - iPad
+    "blackberry"
     
     
 Utiliza regex de "browserRegex.pl"
@@ -17,16 +14,27 @@ Utiliza regex de "browserRegex.pl"
 Ricardo Cunha @ 2013
 =cut
 require "browserRegex.pl";
+#iPod fica em que categoria??
 use constant {
     NOTMOBILE => 0,
     MOBILE => 1,
-    IPHONE => 2,
-    ANDROID => 3,
-    IPAD => 4,
-    IPOD => 5,
-    WP => 6,
-    BLACKBERRY => 7
+    SMARTPHONE => 2,
+    TABLET => 3,
+    BLACKBERRY => 4
 };
+
+use feature qw/switch/; 
+
+sub getDeviceTypeInString{
+    my $constant = shift;
+    given($constant){
+        when(NOTMOBILE){return "Not Mobile"};
+        when(MOBILE){return "Other Mobile Devices"};
+        when(SMARTPHONE){return "Smartphone"};
+        when(TABLET){return "Tablet"};
+        when(BLACKBERRY){return "Blackberry"};
+    }
+}
 
 sub getDeviceType {
     $browser = shift;
@@ -35,28 +43,16 @@ sub getDeviceType {
     if($browser =~ $browserRegex{bots}){
         return NOTMOBILE;
     }
-    #android
-    if($browser =~ $browserRegex{android}){
-        return ANDROID;
-    }
-    #iPhone
-    if($browser =~ $browserRegex{iphone}){
-        return IPHONE;
+    
+    #smartphone - iPod added here for now
+    if($browser =~ $browserRegex{android} || $browser =~ $browserRegex{iphone} || $browser =~ $browserRegex{windowsPhone}
+       || $browser =~ $browserRegex{ipod}){
+        return SMARTPHONE;
     }
     
-    #iPod
-    if($browser =~ $browserRegex{ipod}){
-        return IPOD;
-    }
-    
-    #iPad
+    #tablets
     if($browser =~ $browserRegex{ipad}){
-        return IPAD;
-    }
-    
-    #Windows Phone
-    if($browser =~ $browserRegex{windowsPhone}){
-        return WP;
+        return TABLET;
     }
     
     #Blackberry
