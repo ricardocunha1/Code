@@ -20,8 +20,7 @@ sub addToList {
 
 sub printList{
     foreach $key (sort{$hash{$a} <=> $hash{$b}} keys %hash){
-        # print to allBrowsers.txt file
-        print "$key - $hash{$key}\n\n";
+        print "$key>>>$hash{$key}\n\n";
     }
 }
 
