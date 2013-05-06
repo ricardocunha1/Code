@@ -28,7 +28,7 @@ drawGraphics <- function(){
   plot <- plot + scale_y_continuous(breaks=c(0.05,0.1,0.15,0.2), labels=c("5%","10%","15%","20%"))
   plot <- plot + xlab("Characters per query") + ylab("% of total queries")
   plot <- plot + scale_fill_discrete(name="Terms groups") + theme(legend.position="top")
-  ggsave(paste(graphicsPath,"QueryCharacterDist.pdf", sep = "/"))
+  ggsave(paste(graphicsPath,"QueryCharacterDist.jpg", sep = "/"))
 }
 
 main <- function(){

@@ -45,7 +45,7 @@ drawGraphics <- function(){
   plot <- plot + scale_x_continuous(breaks=c(0.00,20.00,40.00,60.00,80.00,100.00), labels=c("0%", "20%","40%","60%","80%","100%"))
   plot <- plot + scale_y_continuous(breaks=c(0.00,20.00,40.00,60.00,80.00,100.00), labels=c("0%", "20%","40%","60%","80%","100%"))
   plot <- plot + xlab("% of unique queries") + ylab("% of all queries")
-  ggsave(paste(graphicsPath,"QueryDistribution.pdf", sep = "/"))
+  ggsave(paste(graphicsPath,"QueryDistribution.jpg", sep = "/"))
 }
 
 main <- function(){

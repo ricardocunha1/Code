@@ -1,5 +1,6 @@
 #!/usr/bin/perl -w
-
+BEGIN { push @INC, '/Users/ricardocunha/Documents/FEUP/5ano/MSc Thesis/Thesis/Code/Scripts/Utils' }
+require "checkDeviceType.pl";
 #hash que guarda os browsers encontrados
 %hash = ();
 
@@ -22,18 +23,22 @@ sub onList {
 
 sub addToList {
     my $string = shift;
-    if(onList($string)){ # se browser nao esta na lista
-        my $counter = $hash{$string};
-        $counter++;
-        $hash{$string} = $counter;
-    } else {
-        $hash{$string} = 1;
+    if($string =~ m/Windows NT/i || $string =~ m/Windows 98/i || $string =~ m/Windows XP/i || $string =~ m/Mac OS X/i){
+        if(getDeviceType($string) == 0){
+            if(onList($string)){ # se browser nao esta na lista
+                my $counter = $hash{$string};
+                $counter++;
+                $hash{$string} = $counter;
+            } else {
+                $hash{$string} = 1;
+            }
+        } 
     }
     #} 
 }
 
 sub printList{
-    open(FILE, ">MobileDataset/allBrowsers.txt");
+    open(FILE, ">PCDataset/allBrowsers.txt");
     $hashLength = scalar(keys %hash);
     print FILE "$hashLength\n";
     foreach $key (sort keys %hash){
@@ -65,4 +70,6 @@ sub main{
 }
 
 main;
+
+
 

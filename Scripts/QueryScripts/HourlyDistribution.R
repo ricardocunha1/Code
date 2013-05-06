@@ -4,14 +4,16 @@ hours <- 0:23
 queryCounter <- rep(0,24)
 dataFrame <- data.frame(x= numeric(0), y= integer(0))
 
+nQueries <- 0
+
 parseString <- function(str){
   aQuery <- strsplit(str, separator)
-  sDate <- aQuery[[1]][1]
-  oDate <- ymd_hms(sDate);
+  hour <- as.integer(aQuery[[1]][1])
   
   #add to the vectors
-  iIndex <- hour(oDate) + 1
+  iIndex <- hour + 1
   queryCounter[iIndex] <<- queryCounter[iIndex] + 1
+  nQueries <<- nQueries + 1
 }
 
 
@@ -27,17 +29,18 @@ drawGraphics <- function(){
 }
 
 printToFile <- function(filename){
-  write("QUERIES PER WEEK DAY", filename, append=FALSE)
-  write(paste("Mean",mean(queryCounter),sep" -> "), filename, append=TRUE)
+  write("QUERIES PER WEEK DAY", file=filename, append=FALSE)
+  write(paste("Mean",mean(queryCounter),sep=" -> "), file=filename, append=TRUE)
   for(i in 1:24){
-    write(paste(hours[i],queryCounter[i],sep=" -> "), filename, append=TRUE)
+    write(paste(hours[i],paste(queryCounter[i],percent(queryCounter[i]/nQueries),sep=" -> "),sep=" -> "), file=filename, append=TRUE)
   }
 }
 
 main <- function(){
   readFromStdin()
   #create data frame
-  dataFrame <<- data.frame(hours, queryCounter)
+  dataFrame <<- data.frame(hours, queryCounter/nQueries)
+  print(dataFrame)
   filename <- paste(outputPath,"HourlyDistribution.txt", sep = "/")
   printToFile(filename)
   drawGraphics()

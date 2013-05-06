@@ -6,5 +6,6 @@ $browserIndex = 3;
 $keywordsIndex = 4;
 $cityIndex = 5;
 $countryIndex = 6;
+$deviceIndex = 7;
 
 

@@ -1,18 +1,4 @@
 #!/usr/bin/perl -w
-
-=comment
-Script para retirar as queries mobile a partir do dataset SAPO original
-
-Recolhidas as informa›es sobre:
-    -data
-    -ip
-    -browser
-    -query
-    -cidade
-    -pais
-    
-Ricardo Cunha @ 2013
-=cut
 BEGIN { push @INC, '/Users/ricardocunha/Documents/FEUP/5ano/MSc Thesis/Thesis/Code/Scripts/Utils' }
 require "checkDeviceType.pl";
 #require "browserRegex.pl";
@@ -60,24 +46,24 @@ use feature qw/switch/;
 
 sub main{
     my $counter = 0;
-    my $mobileDevices = 0;
-    my $isMobile = 0; #boolean
+    my $desktopQueries = 0;
+    my $isDesktop = 0; #boolean
     my $processingKeywords = 0;
     $currentKeywords = "";
-    open(FILE, ">MobileDataset/queriesFile.txt");
+    open(FILE, ">PCDataset/queriesFile.txt");
     while($_ = <STDIN>){
         #data
         given($_){
             #start notification
             when($_ =~ m/<notification/){
                 
-                if($isMobile){
+                if($isDesktop){
                     my $output = queryToString();
                     print FILE $output;
                 }
                 #clear current hash
                 undef(%currentQuery);
-                $isMobile = 0;
+                $isDesktop = 0;
             }
 
             #date
@@ -96,10 +82,10 @@ sub main{
                    $currentQuery{"browser"} = decode_entities($1);
                    $type = getDeviceType($1);
                  #  print $type. "\n";
-                   if($type != 0 && $type != 5){
+                   if($type == 0){
                         $currentQuery{"device"} = getDeviceTypeInString($type);
-                        $isMobile = 1;
-                        $mobileDevices++;
+                        $isDesktop = 1;
+                        $desktopQueries++;
                    }
                 } else {
                     $currentQuery{"browser"} = "EMPTY";
@@ -189,7 +175,7 @@ sub main{
  
     }
     print "Number of total queries: $counter\n";
-    print "Number of total mobile queries: $mobileDevices\n"; 
+    print "Number of total desktop queries: $desktopQueries\n"; 
     close(FILE);
 }
 

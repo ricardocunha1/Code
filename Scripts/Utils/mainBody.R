@@ -2,8 +2,8 @@ library(lubridate)
 library(ggplot2)
 
 separator <- ">>>"
-outputPath <- "/Users/ricardocunha/Documents/FEUP/5ano/MSc\ Thesis/Thesis/Code/OutputFiles"
-graphicsPath <- "/Users/ricardocunha/Documents/FEUP/5ano/MSc\ Thesis/Thesis/Code/Graphics"
+outputPath <- "/Users/ricardocunha/Documents/FEUP/5ano/MSc\ Thesis/Thesis/Code/MobileDataset/OutputFiles"
+graphicsPath <- "/Users/ricardocunha/Documents/FEUP/5ano/MSc\ Thesis/Thesis/Code/MobileDataset/Graphics"
 
 percent <- function(x, digits = 2, format = "f", ...)
 {
