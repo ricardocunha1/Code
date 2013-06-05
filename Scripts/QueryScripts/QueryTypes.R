@@ -123,6 +123,7 @@ drawGraphics <- function(){
 }
 
 main <- function(){
+  print("Initiating QueryTypes.R")
   readFromStdin();
   filename <- paste(outputPath,"QueryTypes.txt", sep = "/")
   printToFile(filename)

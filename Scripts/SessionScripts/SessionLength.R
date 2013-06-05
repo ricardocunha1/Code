@@ -36,12 +36,13 @@ drawGraphics <- function(){
   plot <- plot + scale_x_continuous(breaks=1:10, labels=c("1","2","3","4","5","6","7","8","9","10+"))
   plot <- plot + scale_y_continuous(breaks=c(0.1,0.2,0.3,0.4,0.5), labels=c("10%","20%","30%","40%","50%"))
   plot <- plot + xlab("Queries per session") + ylab("% of total sessions")
-  ggsave(paste(graphicsPath,"QueriesPerSession.pdf", sep = "/"))
+  ggsave(paste(graphicsPath,"QueriesPerSession.jpg", sep = "/"))
 }
 
 main <- function(){
+  print("Initiating SessionLength.R")
   readFromStdin()
-  filename <- "/Users/ricardocunha/Documents/FEUP/5ano/MSc\ Thesis/Thesis/Code/OutputFiles/SessionLength.txt"
+  filename <- paste(outputPath,"SessionLength.txt", sep = "/")
   printToFile(filename)
   dataFrame <<- data.frame(1:10,queriesPerSession/numberSessions)
   drawGraphics()

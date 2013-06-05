@@ -16,22 +16,25 @@ df <- data.frame(a=numeric(), b=numeric(), c=character())
 parseString <- function(str){
   aLine <- strsplit(str, separator)
   sTerm <- aLine[[1]][1]
-  print(sTerm)
+  #print(str)
   iCounter <- as.integer(aLine[[1]][2])
-  nTerms <<- nTerms + iCounter
-  if(!isFunctionWord(sTerm)){ #is not a function word
-    nTermsWoutFuncWds <<- nTermsWoutFuncWds + iCounter
-    nCharsPerTermWoutFuncWds <<- append(nCharsPerTermWoutFuncWds, nchar(sTerm))
+  if(sTerm != ""){
+    if(!is.na(iCounter)){ #if iCounter is defined
+      nTerms <<- nTerms + iCounter
+      if(!isFunctionWord(sTerm)){ #is not a function word
+        nTermsWoutFuncWds <<- nTermsWoutFuncWds + iCounter
+        nCharsPerTermWoutFuncWds <<- append(nCharsPerTermWoutFuncWds, nchar(sTerm))
+      }
+      
+      if(iCounter == 1){
+        nTermsNeverRepeated <<- nTermsNeverRepeated + 1
+      }
+      terms <<- append(terms, sTerm)
+      termsCounter <<- append(termsCounter, iCounter)
+      nCharsPerTerm <<- append(nCharsPerTerm, nchar(sTerm))
+    }
+  
   }
-  
-  if(iCounter == 1){
-    nTermsNeverRepeated <<- nTermsNeverRepeated + 1
-  }
-  terms <<- append(terms, sTerm)
-  termsCounter <<- append(termsCounter, iCounter)
-  nCharsPerTerm <<- append(nCharsPerTerm, nchar(sTerm))
-  
-  
   
 }
 
@@ -64,10 +67,10 @@ drawGraphics <- function(){
 }
 
 main <- function(){
+  print("Initiating TermGeneralStats.R")
   readFromStdin();
   filename <- paste(outputPath,"TermGeneralStats.txt",sep="/")
   printToFile(filename)
-  drawGraphics()
 }
 
 main();

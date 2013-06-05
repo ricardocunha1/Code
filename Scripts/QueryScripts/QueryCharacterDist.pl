@@ -3,8 +3,9 @@ BEGIN { push @INC, '/Users/ricardocunha/Documents/FEUP/5ano/MSc Thesis/Thesis/Co
 require "FunctionWords.pl";
 BEGIN { push @INC, '/Users/ricardocunha/Documents/FEUP/5ano/MSc Thesis/Thesis/Code/Scripts/Utils' }
 require "sessionFileIndexes.pl";
-
+use DB_File;
 %queries = ();
+tie(%queries, 'DB_File', "queries.dbfile", $DB_BTREE);
 
 
 sub addQueryHash {
@@ -47,6 +48,7 @@ sub main {
 }
 
 main;
+untie(%queries);
 
 
 

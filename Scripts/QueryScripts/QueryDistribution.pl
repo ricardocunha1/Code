@@ -1,8 +1,9 @@
 #!/usr/bin/perl -w
 BEGIN { push @INC, '/Users/ricardocunha/Documents/FEUP/5ano/MSc Thesis/Thesis/Code/Scripts/Utils' }
 require "sessionFileIndexes.pl";
-
+use DB_File;
 %uniqueQueries = ();
+tie(%uniqueQueries, 'DB_File', "unique.dbfile", $DB_BTREE);
 $totalQueries = 0;
 
 sub addUniqueQueries{
@@ -37,5 +38,6 @@ sub main {
 }
 
 main;
+untie(%uniqueQueries);
 
 

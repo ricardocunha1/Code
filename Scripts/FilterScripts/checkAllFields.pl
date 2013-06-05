@@ -3,13 +3,12 @@ BEGIN { push @INC, '/Users/ricardocunha/Documents/FEUP/5ano/MSc Thesis/Thesis/Co
 require "sessionFileIndexes.pl";
 
 sub main {
+    $counter=0;
     while($_ = <STDIN>){
-        @query = split(/>>>/, $_);
-        
-        if($query[$countryIndex] =~  "KW"){
-            print "$_";   
-        }
+        $counter++;
     }
+    
+    print "$counter\n";
 }
 
 main;

@@ -6,6 +6,7 @@ require "sessionFileIndexes.pl";
 
 use DateTime;
 use feature qw/switch/;
+#use DB_File;
 use DB_File;
 
 #variables
@@ -24,6 +25,12 @@ $totalQueries=0;
 #constants
 $sessionCutoff = 5; #in minutes
 $maxQueries = 20; #max 10 queries per session
+
+sub compare
+{
+    my ($key1, $key2) = @_ ;
+    key2 cmp key1;
+}
 
 sub isIPonList {
     $ip = shift;
@@ -46,13 +53,6 @@ sub removeQuery{
     #session with 100+ queries
     return 0;
 }
-
-sub Compare
-    {
-        my ($key1, $key2) = @_ ;
-        $key2 cmp $key1;
-     #   "\L$key1" cmp "\L$key2" ;
-    }
 
 
 sub cloneHash{
@@ -81,14 +81,14 @@ sub addToSession{
     if(!removeQuery()){
         if(isIPonList($currentQuery{"ip"})){
             #add the query
-            if(isQueryOnList($currentQuery{"ip"}, $currentQuery{"date"})){ #repeated query
+            $currentQuery{"date"} =~ m/([0-9]{5})([0-9]{9})/;
+            if(isQueryOnList($currentQuery{"ip"}, $2)){ #repeated query
                 $repeatedQueries++;
                 return;
             }
         } else {
             #create a hash
             $listIPs{$currentQuery{"ip"}} = {};
-            $DB_BTREE->{'compare'} = \&Compare ;
             tie(%{$listIPs{$currentQuery{"ip"}}}, 'DB_File', $currentQuery{'ip'} . ".dbfile", $DB_BTREE);
         }
         my $queryString = hashToString();
@@ -132,7 +132,7 @@ sub printSession{
     #session counter
     my $sessionNumber = 1;
 
-    open(FILE, ">PCDataset/sessionsFile.txt");
+    open(FILE, ">PCDataset/sessionsFile2.txt");
     while (($ip,%queries) = each %listIPs) {
  #   foreach $ip (keys %listIPs){
         my $prevDate = 0;

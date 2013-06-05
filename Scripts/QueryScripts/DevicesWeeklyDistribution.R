@@ -3,13 +3,15 @@ source("/Users/ricardocunha/Documents/FEUP/5ano/MSc\ Thesis/Thesis/Code/Scripts/
 days <- c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
 dataFrame <- data.frame(x= numeric(0), y= integer(0))
 
-mobileQueryCounter <- rep(0,7)
-pcQueryCounter <- rep(0,7)
+tabletQueryCounter <- rep(0,7)
+smartphoneQueryCounter <- rep(0,7)
+cellphoneQueryCounter <- rep(0,7)
 
 deviceType <- vector()
 
-nMobileQueries <- 0
-nPCQueries <- 0
+nTabletQueries <- 0
+nSmartphoneQueries <- 0
+nCellphoneQueries <- 0
 
 parseString <- function(str){
   aQuery <- strsplit(str, separator)
@@ -18,12 +20,15 @@ parseString <- function(str){
   
   #add to the vectors
   iIndex <- wday(oDate)
-  if(aQuery[[1]][2] == "Desktop"){
-    pcQueryCounter[iIndex] <<- pcQueryCounter[iIndex] + 1
-    nPCQueries <<- nPCQueries + 1
-  } else {
-    mobileQueryCounter[iIndex] <<- mobileQueryCounter[iIndex] + 1
-    nMobileQueries <<- nMobileQueries + 1
+  if(aQuery[[1]][2] == "Tablet"){
+    tabletQueryCounter[iIndex] <<- tabletQueryCounter[iIndex] + 1
+    nTabletQueries <<- nTabletQueries + 1
+  } else if(aQuery[[1]][2] == "Smartphone"){
+    smartphoneQueryCounter[iIndex] <<- smartphoneQueryCounter[iIndex] + 1
+    nSmartphoneQueries <<- nSmartphoneQueries + 1
+  } else if(aQuery[[1]][2] == "Other Mobile Devices") {
+    cellphoneQueryCounter[iIndex] <<- cellphoneQueryCounter[iIndex] + 1
+    nCellphoneQueries <<- nCellphoneQueries + 1
   }
 }
 
@@ -42,17 +47,17 @@ drawGraphics <- function(){
 
 
 mergeInfo <- function(){
-  queryCounter <- c(mobileQueryCounter/nMobileQueries, pcQueryCounter/nPCQueries)
+   queryCounter <- c(tabletQueryCounter/nTabletQueries, smartphoneQueryCounter/nSmartphoneQueries, cellphoneQueryCounter/nCellphoneQueries)
  # queryCounter <- c(0.1655310,0.1447266,0.1360307,0.1329797,0.1288975, 0.1400704, 0.1517642,
- #                   0.1082380, 0.1670937, 0.1686073, 0.1627555, 0.1488917, 0.1402737, 0.1041401)
+   #                 0.1082380, 0.1670937, 0.1686073, 0.1627555, 0.1488917, 0.1402737, 0.1041401)
   print(queryCounter)
-  deviceType <<- c(rep("Mobile",7), rep("Desktop", 7))
+  deviceType <<- c(rep("Tablet",7), rep("Smartphone", 7), rep("Traditional", 7))
   print(deviceType)
-  dataFrame <<- data.frame(c(1,2,3,4,5,6,7,1,2,3,4,5,6,7), queryCounter, deviceType)
+  dataFrame <<- data.frame(c(1,2,3,4,5,6,7,1,2,3,4,5,6,7,1,2,3,4,5,6,7), queryCounter, deviceType)
 }
 
 main <- function(){
-  readFromStdin()
+   readFromStdin()
   #create data frame
   mergeInfo()
   print(dataFrame)

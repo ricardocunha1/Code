@@ -12,8 +12,10 @@ nTotalQueries <- 0
 nUniqueQueries <- 0
 
 i<-0
-
+counter <-0
 parseString <- function(str){
+  print(counter)
+  counter <<- counter+1
   if(i==0){
     aLine <- strsplit(str,separator)
     nTotalQueries <<- as.integer(aLine[[1]][1])
@@ -49,6 +51,7 @@ drawGraphics <- function(){
 }
 
 main <- function(){
+  print("Initiating Query Distribution...")
   readFromStdin()
   #create data frame
   dataFrame <<- data.frame(percentUniqueQueries, percentAllQueries)

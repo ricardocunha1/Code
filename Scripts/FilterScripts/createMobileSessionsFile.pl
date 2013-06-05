@@ -6,18 +6,17 @@ Script para criar o ficheiro de sess›es, a partir do ficheiro de queries intermŽ
 Formato de cada linha: idSession>>>ip>>>date>>>browser>>>query>>>city>>>country
 Ricardo Cunha @ 2013
 =cut
-
-
-
-#includes
-use DateTime;
-use feature qw/switch/;
 BEGIN { push @INC, '/Users/ricardocunha/Documents/FEUP/5ano/MSc Thesis/Thesis/Code/Scripts/Utils' }
 require "sessionFileIndexes.pl";
+
+use DateTime;
+use feature qw/switch/;
+use DB_File;
 
 #variables
 %listIPs = ();
 %currentQuery = ();
+%tieObjects = ();
 
 #counters
 $previousTotalQueries = 0;
@@ -38,16 +37,8 @@ sub isIPonList {
 }
 
 sub isQueryOnList {
-    ($ip, $date, $keywords, $browser) = @_;
-    if(exists($listIPs{$ip}{$date})){
-      #  @query = split(/>>>/, "1>>>".$listIPs{$ip}{$date});
-     #   if($query[$keywordsIndex] eq $keywords && $query[$browserIndex] eq $browser){
-      #      return 1;
-     #   }
-     return 1;
-    }
-    
-    return 0;
+    ($ip, $date) = @_;      
+    return exists($listIPs{$ip}{$date});
 }
 
 sub removeQuery{
@@ -60,6 +51,14 @@ sub removeQuery{
     #session with 100+ queries
     return 0;
 }
+
+sub Compare
+    {
+        my ($key1, $key2) = @_ ;
+        $key2 cmp $key1;
+     #   "\L$key1" cmp "\L$key2" ;
+    }
+
 
 sub cloneHash{
     my %tmp = ();
@@ -85,25 +84,32 @@ sub addToSession{
  #   my $tmp = {%currentQuery}; #tmp is a copy of currentQuery
    # cloneHash();
     if(!removeQuery()){
+        my $queryString = hashToString();
         if(isIPonList($currentQuery{"ip"})){
             #add the query
-            if(isQueryOnList($currentQuery{"ip"}, $currentQuery{"date"}, $currentQuery{"keywords"}, $currentQuery{"browser"})){ #repeated query
+            $currentQuery{"date"} =~ m/([0-9]{5})([0-9]{9})/;
+            if(isQueryOnList($currentQuery{"ip"},$2)){ #repeated query
                 $repeatedQueries++;
                 return;
             }
         } else {
             #create a hash
             $listIPs{$currentQuery{"ip"}} = {};
+            $DB_BTREE->{'flags'} = R_DUP ;
+            tie(%{$listIPs{$currentQuery{"ip"}}}, 'DB_File', $currentQuery{'ip'} . ".dbfile", $DB_BTREE);
         }
-        my $queryString = hashToString();
-        $listIPs{$currentQuery{"ip"}}{$currentQuery{"date"}} = $queryString;
+        
+        $currentQuery{"date"} =~ m/([0-9]{5})([0-9]{9})/;
+        $listIPs{$currentQuery{"ip"}}{$2} = $queryString;
         #print $listIPs{$$tmp{"ip"}}{$$tmp{"date"}}{"date"} . "\n";
     }
 }
 
 sub checkSessionCutoff {
     ($prevDate, $currentDate) = @_;
-
+    $prevDate = "20130".$prevDate;
+    $currentDate = "20130".$currentDate;
+    
     $prevDate =~ m/([0-9]{4})([0-9]{02})([0-9]{02})([0-9]{02})([0-9]{02})([0-9]{02})/i;
     $prev = DateTime->new(
         year       => $1,
@@ -133,16 +139,21 @@ sub printSession{
     #session counter
     my $sessionNumber = 1;
 
-    open(FILE, ">MobileDataset/sessionsFile.txt");
-    foreach $ip (keys %listIPs){
+    open(FILE, ">MobileDataset/sessionsFile2.txt");
+    while (($ip,%queries) = each %listIPs) {
+ #   foreach $ip (keys %listIPs){
         my $prevDate = 0;
         my $numberQueries = 0; #number of queries per session counter
         my $output = "";
-        foreach $date (sort(keys %{$listIPs{$ip}})){
+      #  while (($date,$val) = each %{$queries}) {
+        $key = $value = 0 ;
+        foreach $date (sort keys %{$listIPs{$ip}}){
+            $val = $listIPs{$ip}{$date};
           #  print "$query\n";
             if($prevDate != 0 && !checkSessionCutoff($prevDate, $date)){ #outside cutoff range - new session
                 if($output ne "" && $numberQueries < $maxQueries){
                     print FILE $output;
+                #    print "$output\n";
                     $totalQueries += $numberQueries;
                 } else {
                     $sessionsOver100 += $numberQueries;
@@ -152,7 +163,8 @@ sub printSession{
                 $sessionNumber++;
             }
             
-            $output .= "$sessionNumber" . ">>>" . $listIPs{$ip}{$date} . "\n";
+            $output .= "$sessionNumber" . ">>>" . $val . "\n";
+            
 
             #inc session counter
             $numberQueries++;
@@ -162,6 +174,7 @@ sub printSession{
         }
         if($output ne "" && $numberQueries < $maxQueries){
             print FILE $output;
+           # print "$output\n";
             $totalQueries += $numberQueries;
         } else {
             $sessionsOver100 += $numberQueries;
@@ -198,15 +211,15 @@ sub queryIsOK{
 
 sub main{
     while($_ = <STDIN>){
+        
         given($_){
             when($_ =~ m/^<query>$/i){
                 undef(%currentQuery);
-
             }
             
             when($_ =~ m/^<\/query>$/i){
                 $previousTotalQueries++;
-                print "$previousTotalQueries\n";
+              #  print "$previousTotalQueries\n";
                 if(queryIsOK()){
                     addToSession();
                 } else {
@@ -241,6 +254,10 @@ sub main{
             when($_ =~ m/^<device>(.*?)<\/device>$/i){
                 $currentQuery{'device'} = $1;
             }
+            
+           # when($_ =~ m/^<page>(.*?)<\/page>$/i){
+          #      $currentQuery{'page'} = $1;
+          #  }
         }
     }
     
@@ -252,6 +269,7 @@ sub main{
     print "The number of queries that belong to sessions over 100 queries is: $sessionsOver100\n";
     print "The number of spam queries is: $spamQueries\n";
     print "The total number of queries is: $totalQueries\n";
+
     
 }
 

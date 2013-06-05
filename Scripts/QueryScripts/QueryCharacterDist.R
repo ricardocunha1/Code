@@ -32,6 +32,7 @@ drawGraphics <- function(){
 }
 
 main <- function(){
+  print("Initiating QueryCharacterDist.R")
   readFromStdin()
   filename <- paste(outputPath,"QueryCharacterDist.txt", sep = "/")
   printToFile(filename)

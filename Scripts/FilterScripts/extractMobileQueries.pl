@@ -64,7 +64,7 @@ sub main{
     my $isMobile = 0; #boolean
     my $processingKeywords = 0;
     $currentKeywords = "";
-    open(FILE, ">MobileDataset/queriesFile.txt");
+    open(FILE, ">MobileDataset/queriesFile2.txt");
     while($_ = <STDIN>){
         #data
         given($_){

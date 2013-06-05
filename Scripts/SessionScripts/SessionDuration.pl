@@ -6,6 +6,7 @@ require "sessionFileIndexes.pl";
 use Date::Calc qw(:all);
 
 %hash = ();
+$neg=0;
 sub initializeHash{
     $hash{"[0,1["} = 0;
     $hash{"[1,5["} = 0;
@@ -52,7 +53,9 @@ sub addDiffToHash {
         my $counter = $hash{$key};
         $counter++;
         $hash{$key} = $counter;
-    }   
+    } else {
+        $neg++;
+    }
 }
 
 sub checkSessionDuration {
@@ -109,10 +112,12 @@ sub main{
         }
         
     }
+    
+ #   print "$neg\n";
 
     print "intervals\n";
-    foreach $key (keys %hash){
-        print "$key>>>$hash{$key}\n";
+   foreach $key (keys %hash){
+       print "$key>>>$hash{$key}\n";
     }
 }
 

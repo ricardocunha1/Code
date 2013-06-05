@@ -41,11 +41,12 @@ drawGraphics <- function(){
 }
 
 main <- function(){
+  print("Initiating TermCharacterDist.R")
   readFromStdin();
   filename <- paste(outputPath,"TermCharacterDist.txt",sep="/")
   printToFile(filename)
   dataFrame <<- data.frame(charLength, charLengthCounter, termType)
-  print(dataFrame)
+  #print(dataFrame)
   drawGraphics()
 }
 

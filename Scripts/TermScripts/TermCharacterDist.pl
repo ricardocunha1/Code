@@ -3,9 +3,11 @@ BEGIN { push @INC, '/Users/ricardocunha/Documents/FEUP/5ano/MSc Thesis/Thesis/Co
 require "FunctionWords.pl";
 BEGIN { push @INC, '/Users/ricardocunha/Documents/FEUP/5ano/MSc Thesis/Thesis/Code/Scripts/Utils' }
 require "sessionFileIndexes.pl";
-
+use DB_File;
 %termsWFuncWords = ();
+tie(%termsWFuncWords, 'DB_File', "withchar.dbfile", $DB_BTREE);
 %termsWoutFuncWords = ();
+tie(%termsWoutFuncWords, 'DB_File', "woutchar.dbfile", $DB_BTREE);
 
 sub addToWFuncWordsHash {
     my $length = shift;
@@ -69,5 +71,7 @@ sub main {
 }
 
 main;
+untie(%termsWoutFuncWords);
+untie(%termsWFuncWords);
 
 

@@ -12,6 +12,7 @@ state <- 0
 
 
 parseString <- function(str){
+ # print(str)
   if(state == 0){
     if(str == "intervals"){
       state <<- 1
@@ -66,6 +67,7 @@ printToFile <- function(filename){
 }
 
 main <- function(){
+  print("Initiating SessionDuration.R")
   readFromStdin()
   filename <- paste(outputPath,"SessionDuration.txt", sep = "/")
   printToFile(filename)

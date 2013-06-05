@@ -2,32 +2,47 @@
 BEGIN { push @INC, '/Users/ricardocunha/Documents/FEUP/5ano/MSc Thesis/Thesis/Code/Scripts/Utils' }
 require "sessionFileIndexes.pl";
 
-@queries = ();
+use DB_File;
+%queries = ();
+tie(%queries, 'DB_File', "queries.dbfile", $DB_BTREE);
+
 $numberQueries = 0;
 $uniqueQueries = 0;
 
 sub isQueryOnList{
-    $keywords = shift;
-    foreach $query (@queries){
-        if($query eq $keywords){
-            return 1;
-        }
-    }
+    $query = shift;
+    return exists($queries{$query});
+
 }
 
 sub processQuery{
     $keywords = shift;
     if(!isQueryOnList($keywords)){
-        push(@queries, $keywords);
+        $queries{$keywords} = 1;
         $uniqueQueries++;
+    } else {
+        $queries{$keywords}++;
     }
 }
 
 sub printResults{
-    print "Unique queries: $uniqueQueries\n";
-    print "Total queries: $numberQueries\n";
+    print "unique>>>$uniqueQueries\n";
+    print "total>>>$numberQueries\n";
     $ratio = sprintf("%.2f",($uniqueQueries/$numberQueries)*100);
-    print "Ratio: $ratio%\n"
+    print "ratio>>>$ratio%\n";
+    
+    my $counter=0;
+    my $top1000queries=0;
+    foreach $query ( sort{$queries{$b} <=> $queries{$a}} keys %queries){
+        if($counter==1000){
+            last;
+        }
+        
+        $top1000queries += $queries{$query};
+        $counter++;
+    }
+    print "top1000>>>" . ($top1000queries/$numberQueries)*100;
+    
 }
 
 sub main{
@@ -44,5 +59,6 @@ sub main{
 }
 
 main;
+untie(%queries);
 
 

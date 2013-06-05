@@ -27,6 +27,7 @@ sub queryToString {
     $output .= "<keywords>" . $currentQuery{"query"} . "</keywords>\n";
     $output .= "<city>" . $currentQuery{"city"} . "</city>\n";
     $output .= "<country>" . $currentQuery{"country"} . "</country>\n";
+    $output .= "<page>" . $currentQuery{"page"} . "</page>\n";
     $output .= "<device>" . $currentQuery{"device"} . "</device>\n";
     $output .= "</query>\n\n";
     
@@ -50,7 +51,7 @@ sub main{
     my $isDesktop = 0; #boolean
     my $processingKeywords = 0;
     $currentKeywords = "";
-    open(FILE, ">PCDataset/queriesFile.txt");
+    open(FILE, ">PCDataset/queriesFile2.txt");
     while($_ = <STDIN>){
         #data
         given($_){
@@ -168,6 +169,17 @@ sub main{
                 }
                 
                 $currentQuery{"country"} = $country;
+            }
+            
+            #page
+            when($_ =~ m/^<page/){
+                if($_ =~ m/^<page>(.*?)<\/page>$/){
+                    $page = $1;
+                } else {
+                    $page = -1;
+                }
+                
+                $currentQuery{"page"} = $page;
             }
             
             default {continue;}

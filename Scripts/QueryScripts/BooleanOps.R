@@ -48,6 +48,7 @@ printToFile <- function(filename){
 }
 
 main <- function(){
+  print("Initiating BooleanOps.R")
   readFromStdin();
   filename <- paste(outputPath,"BooleanOps.txt", sep = "/")
   printToFile(filename)

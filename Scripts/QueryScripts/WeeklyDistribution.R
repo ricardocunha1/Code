@@ -14,7 +14,7 @@ parseString <- function(str){
   #add to the vectors
   iIndex <- wday(oDate)
   queryCounter[iIndex] <<- queryCounter[iIndex] + 1
-  nQueries <<- nQueries + 1
+  nQueries <- nQueries + 1
 }
 
 
@@ -44,7 +44,7 @@ main <- function(){
   filename <- paste(outputPath,"WeeklyDistribution.txt", sep = "/")
   print(dataFrame)
   printToFile(filename)
-  drawGraphics()
+ # drawGraphics()
 }
 
 main()

@@ -1,8 +1,9 @@
 #!/usr/bin/perl -w
 BEGIN { push @INC, '/Users/ricardocunha/Documents/FEUP/5ano/MSc Thesis/Thesis/Code/Scripts/Utils' }
 require "sessionFileIndexes.pl";
-
+use DB_File;
 %termsHash = ();
+tie(%termsHash, 'DB_File', "terms.dbfile", $DB_BTREE);
 
 sub isTermOnHash{
     my $term = shift;
@@ -42,5 +43,5 @@ sub main{
 }
 
 main;
-
+untie(%termsHash);
 

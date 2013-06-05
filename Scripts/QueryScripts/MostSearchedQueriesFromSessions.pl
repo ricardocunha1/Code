@@ -3,7 +3,11 @@ BEGIN { push @INC, '/Users/ricardocunha/Documents/FEUP/5ano/MSc Thesis/Thesis/Co
 require "sessionFileIndexes.pl";
 require "checkDeviceType.pl";
 
+use DB_File;
 %queries = ();
+tie(%queries, 'DB_File', "queries.dbfile", $DB_BTREE);
+
+$numberQueries=0;
 
 sub addQuery{
     $query = shift;
@@ -15,18 +19,27 @@ sub addQuery{
 }
 
 sub printResults {
-    foreach $query ( sort{$queries{$a} <=> $queries{$b}} keys %queries){
+    print "$numberQueries\n";
+    $counter = 0;
+    foreach $query ( sort{$queries{$b} <=> $queries{$a}} keys %queries){
+        if($counter == 500){
+            last;
+        }
         print "$query>>>$queries{$query}\n";
+        $counter++;
     }
 }
 
 sub main{
     while($_ = <STDIN>){
-        my @query = split(/>>>/, $_);
-        my $keywords = lc($query[$keywordsIndex]);
-        
-        if($keywords ne ""){
-            addQuery($keywords);
+        if($_ ne "\n"){
+            @query = split(/>>>/, $_);
+            $keywords = lc($query[$keywordsIndex]);
+            
+            if($keywords ne ""){
+                addQuery($keywords);
+                $numberQueries++;
+            }
         }
     }
     
@@ -34,5 +47,6 @@ sub main{
 }
 
 main;
+untie(%queries);
 
 

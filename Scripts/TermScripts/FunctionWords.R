@@ -7,7 +7,7 @@ isFunctionWord <- function(term){
        term == "sua" || term == "do" || term == "nos" || term == "ao" || term == "nao" ||
        term == "be" || term == "suas" || term == "dos" || term == "nas" || term == "sobre" ||
        term == "ou" || term == "our" || term == "onde" || term == "das" || term == "para" ||
-       term == "the" || term == "onde" || term == "ser" || term == "quem" || term == "a" ||
+       term == "the" || term == "ser" || term == "quem" || term == "a" ||
        term == "com" || term == "se" || term == "entre" || term == "this" || term == "qual" ||
        term == "o" || term == "que" || term == "mais" || term == "sem" || term == "not" ||
        term == "my" || term == "as" || term == "como" || term == "sao" || term == "for" ||

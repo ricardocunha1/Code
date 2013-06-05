@@ -19,8 +19,8 @@ uniqueQueriesWoutFuncWordsCounter <- 0
 i<-0
 
 parseString <- function(str){
+  aLine <- strsplit(str, separator)
   if(i==0){
-    aLine <- strsplit(str, separator)
     allQueriesWFuncWords <<- as.integer(aLine[[1]][1])
     uniqueQueriesWFuncWords <<- as.integer(aLine[[1]][2])
     allQueriesWoutFuncWords <<- as.integer(aLine[[1]][3])
@@ -31,23 +31,35 @@ parseString <- function(str){
       i <<- 2
     }
     else {
-      aLine <- strsplit(str, separator)
-      uniqueQueriesWFuncWordsCounter <<- uniqueQueriesWFuncWordsCounter+1
-      allQueriesWFuncWordsCounter <<- allQueriesWFuncWordsCounter + as.integer(aLine[[1]][2])
+      iCounter <- as.integer(aLine[[1]][2])
+      if(aLine[[1]][1] != ""){
+        if(!is.na(iCounter)){
+          
+          uniqueQueriesWFuncWordsCounter <<- uniqueQueriesWFuncWordsCounter+1
+          allQueriesWFuncWordsCounter <<- allQueriesWFuncWordsCounter + as.integer(aLine[[1]][2])
+          
+          percentUniqueQueries <<- append(percentUniqueQueries, as.numeric(rawPercent(uniqueQueriesWFuncWordsCounter/uniqueQueriesWFuncWords)))
+          percentAllQueries <<- append(percentAllQueries, as.numeric(rawPercent(allQueriesWFuncWordsCounter/allQueriesWFuncWords)))
+          termType <<- append(termType, "w/ function words")
+        }
+      }
       
-      percentUniqueQueries <<- append(percentUniqueQueries, as.numeric(rawPercent(uniqueQueriesWFuncWordsCounter/uniqueQueriesWFuncWords)))
-      percentAllQueries <<- append(percentAllQueries, as.numeric(rawPercent(allQueriesWFuncWordsCounter/allQueriesWFuncWords)))
-      termType <<- append(termType, "w/ function words")
     }
 
   } else {
-    aLine <- strsplit(str, separator)
-    uniqueQueriesWoutFuncWordsCounter <<- uniqueQueriesWoutFuncWordsCounter+1
-    allQueriesWoutFuncWordsCounter <<- allQueriesWoutFuncWordsCounter + as.integer(aLine[[1]][2])
+    iCounter <- as.integer(aLine[[1]][2])
+    if(aLine[[1]][1] != ""){
+      if(!is.na(iCounter)){
+        
+        uniqueQueriesWoutFuncWordsCounter <<- uniqueQueriesWoutFuncWordsCounter+1
+        allQueriesWoutFuncWordsCounter <<- allQueriesWoutFuncWordsCounter + as.integer(aLine[[1]][2])
+        
+        percentUniqueQueries <<- append(percentUniqueQueries, as.numeric(rawPercent(uniqueQueriesWoutFuncWordsCounter/uniqueQueriesWoutFuncWords)))
+        percentAllQueries <<- append(percentAllQueries, as.numeric(rawPercent(allQueriesWoutFuncWordsCounter/allQueriesWoutFuncWords)))
+        termType <<- append(termType, "w/out function words")
+      }
+    }
     
-    percentUniqueQueries <<- append(percentUniqueQueries, as.numeric(rawPercent(uniqueQueriesWoutFuncWordsCounter/uniqueQueriesWoutFuncWords)))
-    percentAllQueries <<- append(percentAllQueries, as.numeric(rawPercent(allQueriesWoutFuncWordsCounter/allQueriesWoutFuncWords)))
-    termType <<- append(termType, "w/out function words")
   }
 }
 
@@ -66,10 +78,11 @@ drawGraphics <- function(){
   plot <- plot + xlab("% of unique terms") + ylab("% of all terms")
   plot <- plot + labs(colour="Terms groups") + theme(legend.position="top")
   
-  ggsave(paste(graphicsPath,"TermDistribution.pdf", sep = "/"))
+  ggsave(paste(graphicsPath,"TermDistribution.jpg", sep = "/"))
 }
 
 main <- function(){
+  print("Initiating TermDistribution.R")
   readFromStdin()
   #create data frame
   dataFrame <<- data.frame(percentUniqueQueries, percentAllQueries)
